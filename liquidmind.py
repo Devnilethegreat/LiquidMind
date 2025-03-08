@@ -46,3 +46,19 @@ class LiquidMind:
     """Main orchestrator for LiquidMind."""
 
     def __init__(self, verbose: bool = False):
+        self.verbose = verbose
+        self.threshold = float(os.getenv("THRESHOLD", "0.75"))
+        self.core = LiquidMindCore(threshold=self.threshold, verbose=verbose)
+        self.logger = self._setup_logging()
+
+    def _setup_logging(self) -> logging.Logger:
+        logger = logging.getLogger(__name__)
+        level = logging.DEBUG if self.verbose else logging.INFO
+        logger.setLevel(level)
+        handler = logging.StreamHandler()
+        handler.setFormatter(
+            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        )
+        logger.addHandler(handler)
+        return logger
+
