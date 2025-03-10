@@ -62,3 +62,19 @@ class LiquidMind:
         logger.addHandler(handler)
         return logger
 
+    def _fetch_data(self) -> dict:
+        """Stub: replace with live data source integration."""
+        return {"value": 825_000.0, "velocity": 210.0, "count": 38}
+
+    def run(self) -> bool:
+        try:
+            self.logger.info("Starting LiquidMind processing pipeline")
+            data = self._fetch_data()
+            result = self.core.process(data)
+            self.logger.info("Score: %.4f | Flagged: %s", result["score"], result["flagged"])
+            if result["flagged"]:
+                self.logger.warning("ACTION REQUIRED: score %.4f exceeds threshold %.2f",
+                                    result["score"], result["threshold"])
+            else:
+                self.logger.info("All metrics within normal parameters.")
+            return True
