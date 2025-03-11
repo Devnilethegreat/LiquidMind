@@ -78,3 +78,21 @@ class LiquidMind:
             else:
                 self.logger.info("All metrics within normal parameters.")
             return True
+        except Exception as exc:
+            self.logger.error("Pipeline failed: %s", str(exc), exc_info=self.verbose)
+            return False
+
+
+def main():
+    parser = argparse.ArgumentParser(description="LiquidMind")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging")
+    parser.add_argument("--threshold", type=float, default=0.75, help="Alert threshold (0-1)")
+    args = parser.parse_args()
+
+    app = LiquidMind(verbose=args.verbose)
+    if not app.run():
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
